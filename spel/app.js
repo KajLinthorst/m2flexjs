@@ -4,8 +4,10 @@ let g = canvas.getContext("2d")
 let boardPositionSize= 50;
 let pawnPositions = [];
 let boardPositions= [];
-let playerAmountButtons= [button,];
+let playerAmountButtons= [];
 let uiWindow = createRect(600, 200,300,300)
+
+let images ={};
 
 
 const gamestate_start=0;
@@ -15,6 +17,80 @@ const gamestate_gameover=2;
 const ingamestate_start=0;
 const ingamestate_roll=1;
 const ingamestate_end=0;
+
+let gamestate = gamestate_start;
+let ingameState = ingamestate_start;
+
+
+function loadImages()
+{
+    let sources = [
+        "img/dice1.png", "img/dice2.png", "img/dice3.png", "img/dice4.png", "img/dice5.png", "img/dice6.png",
+        "img/pawn0.png", "img/pawn1.png", "img/pawn2.png", "img/pawn3.png", 
+        "img/snakes.png", 
+        "img/trophy.png", 
+        "img/window.png", 
+    ];
+    
+    let scope = this;
+
+    let loaded = 0;
+    for (let i = 0; i < sources.length; i++)
+    {
+        let img = new Image();
+
+
+        img.onload = function ()
+        {
+            loaded++;
+            if (loaded == sources.length)
+            {
+                imagesLoaded();
+            }
+        };
+        img.src = sources[i];
+
+        images[ sources[i].replace("img/","")] = img;
+    }
+}
+
+function imagesLoaded(){
+    initGame();
+    draw();
+}
+
+
+function drawGameStart(){
+    for (let i = 0; i < playerAmountButtons.length; i++) {
+        let pos = playerAmountButtons[i];
+        g.fillStyle = "#3f3324";
+        g.drawImage(images["pawn"+i+".png"],pos.x,pos.y,pos.w,[pos.h]);
+        g.fillRect(pos.x,pos.y,pos.w,pos.h);
+        g.fillStyle = "#c67c1e";
+        g.fillText((i+1)+"",pos.x,pos.y+20);
+
+    }
+}
+
+function drawIngame(){
+    for(let i =0 ; i<boardPositions.length;i++)
+    {
+        let pos = boardPositions[i]
+
+        g.fillStyle = "#004400"
+        g.fillRect(pos.x,pos.y,pos.w,pos.h);
+        g.fillStyle = "#FFFFFF"
+        g.fillText((i+1) +"",pos.x,pos.y+20);
+        g.fillText("Click the amount of players to start", 610, 240);
+    }
+
+}
+
+
+function drawGameOver(){
+
+}
+
 
 
 function createRect(x,y,w,h)
@@ -38,15 +114,11 @@ function clearCanvas()
 function draw()
 {
     clearCanvas();
-    for(let i =0 ; i<boardPositions.length;i++)
-    {
-        let pos = boardPositions[i];
-
-        g.fillStyle  = "#004400";
-
-        g.fillRect(pos.x,pos.y,pos.h,pos.w);
-        g.fillStyle  = "#FFFFFF";
-        g.fillText((i+1)+"",pos.x,pos.y+20);
+    if (gamestate == gamestate_start) {
+       drawGameStart();
+    }
+    else if (gamestate == gamestate_ingame) {
+        drawIngame();
     }
 }
 
@@ -75,9 +147,13 @@ function createBoardPositions() {
 
 function initGame() {
     createBoardPositions();
-     for (let index = 0; index < 4; index++) {
-          let button = createRect(uiWindow.x+5+ (index*50) , uiWindow.y+50,50,50);
+     for (let i = 0; i < 4; i++) {
+          let button = createRect(uiWindow.x+5+ (i*50) , uiWindow.y+50,50,50);
+          button.playerAmount=i+1;
+          playerAmountButtons.push(button);
      } 
+     
 }
 
+loadImages();
 
