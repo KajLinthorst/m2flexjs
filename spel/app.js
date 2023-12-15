@@ -64,10 +64,10 @@ function drawGameStart(){
     for (let i = 0; i < playerAmountButtons.length; i++) {
         let pos = playerAmountButtons[i];
         g.fillStyle = "#3f3324";
-        g.drawImage(images["pawn"+i+".png"],pos.x,pos.y,pos.w,[pos.h]);
         g.fillRect(pos.x,pos.y,pos.w,pos.h);
         g.fillStyle = "#c67c1e";
         g.fillText((i+1)+"",pos.x,pos.y+20);
+        g.drawImage(images["pawn"+i+".png"],pos.x,pos.y,pos.w,[pos.h]);
 
     }
 }
@@ -129,15 +129,15 @@ function createBoardPositions() {
  
     for (let i = 0; i < path.length; i++) {
  
-        if (path[i] == 1)//gaan naar rechts
+        if (path[i] == 1) //gaan naar rechts
         {
             x += boardPositionSize;
         }
-        else if (path[i] == 3)//gaan naar links
+        else if (path[i] == 3) //gaan naar links
         {
             x -= boardPositionSize;
         }
-        else if (path[i] == 0)//gaan hier naar boven
+        else if (path[i] == 0) //gaan hier naar boven
         {
             y -= boardPositionSize;
         }
@@ -156,4 +156,3 @@ function initGame() {
 }
 
 loadImages();
-
