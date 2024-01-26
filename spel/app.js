@@ -172,6 +172,8 @@ function initGame() {
         let button = createRect(uiWindow.x + 5 + (i * 50), uiWindow.y + 50, 50, 50);
         button.playerAmount = i + 1;
         playerAmountButtons.push(button);
+        startGame(button.playerAmount);
+        break;
     }
 
 }
