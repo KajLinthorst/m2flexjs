@@ -1,6 +1,9 @@
 let canvas = document.getElementById("canvas");
 let g = canvas.getContext("2d")
 
+
+
+
 let boardPositionSize = 50;
 let pawnPositions = [];
 let boardPositions = [];
@@ -14,10 +17,15 @@ const gamestate_start = 0;
 const gamestate_ingame = 1;
 const gamestate_gameover = 2;
 
+
+
+
 const ingamestate_start = 0;
 const ingamestate_roll = 1;
 const ingamestate_end = 0;
 
+let playerTurn = -1;
+let winner = -1;
 let gamestate = gamestate_start;
 let ingameState = ingamestate_start;
 
@@ -96,12 +104,18 @@ function drawGameStart() {
 function drawIngame() {
     for (let i = 0; i < boardPositions.length; i++) {
         let pos = boardPositions[i]
+        let boardI = pos.boardI;
+
+        let boardpos = boardPositions[boardI];
+        let pawnSize = boardPositionSize/2;
 
         g.fillStyle = "#004400"
         g.fillRect(pos.x, pos.y, pos.w, pos.h);
         g.fillStyle = "#FFFFFF"
         g.fillText((i + 1) + "", pos.x, pos.y + 20);
         g.fillText("Click the amount of players to start", 610, 240);
+        g.drawImage(images["pawn" + i + ".png"], boardpos, boardpos, pawnSize, [pawnSize]);
+    
     }
 
 }
@@ -111,6 +125,29 @@ function drawGameOver() {
 
 }
 
+function createPawn(playerI)
+{
+    return { boardI:0,playerI:playerI};
+}
+
+
+
+function startGame(playerAmount)
+{
+    gamestate = gamestate_ingame;
+    ingameState = ingamestate_start
+    pawnPositions=[];//maak een nieuwe pionnen lijst
+    playerTurn=0;
+    winner=-1;
+    console.log("playerAmount " + playerAmount);
+    for (let i = 0; i < playerAmount; i++) 
+    {
+       let newPawn = createPawn(i);
+       pawnPositions.push(newPawn);
+    }
+
+    draw();
+}
 function inRect(px, py, rect){
     let result= (px >= rect.x && px <= rect.x2 && py >= rect.y && py <= rect.y2);
     return result;
@@ -159,9 +196,8 @@ function createBoardPositions() {
             x -= boardPositionSize;
         }
         else if (path[i] == 0) //gaan hier naar boven
-        {
-            y -= boardPositionSize;
-        }
+        y -= boardPositionSize;        {
+    }
         boardPositions.push(createRect(x, y, boardPositionSize, boardPositionSize));
     }
 }
@@ -175,7 +211,6 @@ function initGame() {
         startGame(button.playerAmount);
         break;
     }
-
 }
 
 loadImages();
